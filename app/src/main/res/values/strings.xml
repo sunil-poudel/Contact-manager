@@ -2,5 +2,5 @@
     <string name="app_name">ContactManager</string>
     <string name="edit_icon">edit icon</string>
     <string name="cross_icon">cross icon</string>
-    <string name="added_on">Added on</string>
+    <string name="added_on">Added on: January 4, 2025</string>
 </resources>
