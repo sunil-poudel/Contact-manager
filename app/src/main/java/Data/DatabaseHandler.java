@@ -55,12 +55,12 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 new String[]{String.valueOf(id)}, null, null, null, null
                 );
 
-        if(cursor!=null)
+        Contact contact = new Contact("XXXXX", "XXXXXXXXXX");
+        if(cursor!=null) {
             cursor.moveToFirst();
-        assert cursor != null;
-        Contact contact = new Contact(Integer.parseInt(cursor.getString(0)), cursor.getString(1), cursor.getString(2));
-
-        cursor.close();;
+            contact = new Contact(Integer.parseInt(cursor.getString(0)), cursor.getString(1), cursor.getString(2));
+            cursor.close();
+        }
 
         return contact;
     }
@@ -86,8 +86,30 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         return listOfcontacts;
     }
 
+    public void deleteContact(Contact contact){
+        SQLiteDatabase db = this.getWritableDatabase();
 
+        db.delete(UtilDb.TABLE_NAME, UtilDb.KEY_ID+"=?", new String[]{String.valueOf(contact.getId())});
 
+    }
 
+    public int getContactCount(){
+        SQLiteDatabase db = this.getWritableDatabase();
+        String getQuery = "SELECT * FROM "+UtilDb.TABLE_NAME;
+        Cursor cursor = db.rawQuery(getQuery, null);
+        int count = cursor.getCount();
+        cursor.close();
+        return count;
+    }
 
+    public void updateContact(Contact contact){
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        ContentValues values = new ContentValues();
+        values.put(UtilDb.KEY_NAME, contact.getContactName());
+        values.put(UtilDb.KEY_PHONE_NUMBER, contact.getContactPhoneNumber());
+
+        db.update(UtilDb.TABLE_NAME, values, UtilDb.KEY_ID+"=?", new String[]{String.valueOf(contact.getId())});
+
+    }
 }

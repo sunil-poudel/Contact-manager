@@ -1,0 +1,5 @@
+1. ensure this is the height configuration in root relative layout
+in inflated xml file, else there will be big space between them and
+it will create confusion.
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">

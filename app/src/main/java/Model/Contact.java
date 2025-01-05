@@ -13,9 +13,9 @@ public class Contact {
         this.contactPhoneNumber = contactPhoneNumber;
     }
 
-    public Contact(String contactPhoneNumber, String contactName) {
-        this.contactPhoneNumber = contactPhoneNumber;
+    public Contact(String contactName, String contactPhoneNumber) {
         this.contactName = contactName;
+        this.contactPhoneNumber = contactPhoneNumber;
     }
 
     public int getId() {
