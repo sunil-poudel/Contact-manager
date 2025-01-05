@@ -1,0 +1,63 @@
+Your implementation has an issue with how you are adding new contacts to the database and updating the RecyclerView in the MainActivity. Specifically:
+
+Problem with Adding New Contacts:
+
+When you add a contact from AddContactActivity, the MainActivity is restarted with the new contact data passed via Intent. However, you are not correctly refreshing the RecyclerView with the updated contact list.
+Lifecycle Issue:
+
+Each time you navigate back to MainActivity, you are not properly re-fetching the data from the database or updating the RecyclerView.
+Fixes
+1. Properly Handle Adding Contacts
+Instead of passing the contact details (Name, Phone) via an Intent, directly add the contact to the database in AddContactActivity, and then simply return to MainActivity. For this, use the onActivityResult or ActivityResultLauncher pattern.
+
+Update AddContactActivity:
+
+java
+Copy code
+addContactSubmitButton.setOnClickListener(new View.OnClickListener() {
+    @Override
+    public void onClick(View v) {
+        String name = addContactName.getText().toString();
+        String phoneNumber = addContactPhone.getText().toString();
+
+        // Save the contact directly in the database
+        DatabaseHandler db = new DatabaseHandler(AddContactActivity.this);
+        db.addContact(new Contact(name, phoneNumber));
+
+        // Finish the activity and go back to MainActivity
+        finish();
+    }
+});
+2. Refresh RecyclerView in MainActivity:
+When returning to MainActivity, re-fetch the contact list from the database and notify the Adapter.
+
+Update MainActivity:
+
+java
+Copy code
+@Override
+protected void onResume() {
+    super.onResume();
+
+    // Refresh the contact list from the database
+    contactList = contactsDatabase.getAllContacts();
+
+    if (contactsAdapter == null) {
+        contactsAdapter = new ContactsAdapter(this, contactList);
+        recyclerView.setAdapter(contactsAdapter);
+    } else {
+        contactsAdapter.notifyDataSetChanged();
+    }
+}
+3. Use finish() Instead of Starting a New Activity:
+In AddContactActivity, after adding the contact to the database, call finish() instead of starting a new MainActivity. This will prevent creating duplicate MainActivity instances and simplify the flow.
+
+Summary of Changes:
+Save the contact directly in AddContactActivity.
+Use finish() in AddContactActivity to return to MainActivity.
+Refresh the contact list and RecyclerView in the onResume() method of MainActivity.
+This will ensure the following:
+
+Contacts are properly saved in the database.
+RecyclerView is updated as soon as you return to MainActivity.
+You don't create multiple instances of MainActivity.

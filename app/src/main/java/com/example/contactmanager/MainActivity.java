@@ -1,5 +1,6 @@
 package com.example.contactmanager;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -39,7 +40,7 @@ public class MainActivity extends AppCompatActivity {
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        contactsDatabase.addContact(new Contact("Sunil Poudel", "XXXXXXXXXX"));
+//        contactsDatabase.addContact(new Contact("Sunil Poudel", "XXXXXXXXXX"));
         contactList = contactsDatabase.getAllContacts();
 
         if(contactsAdapter==null) {
@@ -49,11 +50,17 @@ public class MainActivity extends AppCompatActivity {
             contactsAdapter.notifyDataSetChanged();
         }
 
-        for(Contact c:contactList){
-            Log.d("Contacts displaying: ",
-                    "id->"+c.getId()+"name: "+ c.getContactName()+" phone: "+c.getContactPhoneNumber()
-                    );
-        }
+        addContactButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, AddContactActivity.class);
+                startActivity(intent);
+            }
+        });
 
+        Intent intent = getIntent();
+        String addedName = intent.getStringExtra("Name");
+        String addedPhoneNumber = intent.getStringExtra("Phone");
+        contactsDatabase.addContact(new Contact(addedName, addedPhoneNumber));
     }
 }
