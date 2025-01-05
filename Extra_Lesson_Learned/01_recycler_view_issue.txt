@@ -1,5 +1,25 @@
 1. ensure this is the height configuration in root relative layout
-in inflated xml file, else there will be big space between them and
-it will create confusion.
+    in inflated xml file, else there will be big space between them and
+    it will create confusion.
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
+
+2. Important:
+    if we have a UI that shows delete option available in recycler view, upon deleting, it is
+    good to refresh the list. to do so, we can do something like
+            @Override
+            public void onClick(View v) {
+                int buttonId = v.getId();
+                int position = getAdapterPosition();
+
+                if(buttonId==R.id.contact_delete){
+                    Log.d("DELETE", "Delete contact: name->"+contactList.get(position).getContactName()+", phone->"+contactList.get(position).getContactPhoneNumber());
+                    db.deleteContact(contactList.get(position));
+
+                    // Remove the contact from the list and notify the adapter
+                    contactList.remove(position); // Remove the item from your local list
+                    notifyItemRemoved(position); // Notify RecyclerView that an item was removed
+                    //notifyItemRangeChanged(position, contactList.size()); // Optional: Refresh item positions
+            }
+
+3. Anywhere inside adapter, we can call getAdapterPosition() to get current position.

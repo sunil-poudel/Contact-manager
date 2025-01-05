@@ -2,6 +2,7 @@ package com.example.contactmanager;
 
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
@@ -38,6 +39,7 @@ public class MainActivity extends AppCompatActivity {
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
+        contactsDatabase.addContact(new Contact("Sunil Poudel", "XXXXXXXXXX"));
         contactList = contactsDatabase.getAllContacts();
 
         if(contactsAdapter==null) {
@@ -49,10 +51,9 @@ public class MainActivity extends AppCompatActivity {
 
         for(Contact c:contactList){
             Log.d("Contacts displaying: ",
-                    "name: "+ c.getContactName()+" phone: "+c.getContactPhoneNumber()
+                    "id->"+c.getId()+"name: "+ c.getContactName()+" phone: "+c.getContactPhoneNumber()
                     );
         }
-
 
     }
 }
