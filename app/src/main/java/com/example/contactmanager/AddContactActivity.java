@@ -35,10 +35,9 @@ public class AddContactActivity extends AppCompatActivity {
             public void onClick(View v) {
                 String name = addContactName.getText().toString();
                 String phoneNumber = String.valueOf(addContactPhone.getText().toString());
-                Intent intent = new Intent(AddContactActivity.this, MainActivity.class);
-                intent.putExtra("Name", name);
-                intent.putExtra("Phone", phoneNumber);
-                startActivity(intent);
+                DatabaseHandler db = new DatabaseHandler(AddContactActivity.this);
+                db.addContact(new Contact(name, phoneNumber));
+                finish();
             }
         });
 

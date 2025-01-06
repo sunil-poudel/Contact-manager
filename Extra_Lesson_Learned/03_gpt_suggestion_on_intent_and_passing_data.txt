@@ -37,17 +37,15 @@ java
 Copy code
 @Override
 protected void onResume() {
-    super.onResume();
+        super.onResume();
 
-    // Refresh the contact list from the database
-    contactList = contactsDatabase.getAllContacts();
+        // Refresh the contact list from the database
+        contactList = contactsDatabase.getAllContacts();
 
-    if (contactsAdapter == null) {
         contactsAdapter = new ContactsAdapter(this, contactList);
         recyclerView.setAdapter(contactsAdapter);
-    } else {
-        contactsAdapter.notifyDataSetChanged();
-    }
+        contactsAdapter.notifyItemInserted(contactList.size()-1);
+
 }
 3. Use finish() Instead of Starting a New Activity:
 In AddContactActivity, after adding the contact to the database, call finish() instead of starting a new MainActivity. This will prevent creating duplicate MainActivity instances and simplify the flow.

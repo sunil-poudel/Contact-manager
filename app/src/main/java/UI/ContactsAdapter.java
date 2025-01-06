@@ -8,6 +8,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
@@ -114,6 +115,61 @@ public class ContactsAdapter extends RecyclerView.Adapter<ContactsAdapter.ViewHo
 
                 AlertDialog alertDialog = alertDialogBuilder.create();
                 alertDialog.show();
+
+                Log.d("SERIOUS", "something error might have happened");
+            }
+            else if(buttonId==R.id.contact_edit){
+                View view = LayoutInflater.from(context).inflate(R.layout.edit_contact_popup, (ViewGroup) itemView.getRootView(), false);
+
+                EditText editName = view.findViewById(R.id.editText_edit_name);
+                EditText editPhone = view.findViewById(R.id.editText_edit_phone);
+                editName.setText(contactList.get(getAdapterPosition()).getContactName());
+                editPhone.setText(contactList.get(getAdapterPosition()).getContactPhoneNumber());
+
+                alertDialogBuilder.setTitle("Edit contact");
+                alertDialogBuilder.setIcon(R.drawable.pencil_icon);
+
+                alertDialogBuilder.setCancelable(true);
+                alertDialogBuilder.setView(view);
+
+                alertDialogBuilder.setPositiveButton("Confirm", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        String updatedName = editName.getText().toString();
+                        String updatedPhone = editPhone.getText().toString();
+//                        Log.d("UPDATE", updatedName+" "+updatedPhone);
+                        db.updateContact(new Contact(updatedName, updatedPhone));
+                        notifyItemChanged(getAdapterPosition());
+                    }
+                });
+
+                alertDialogBuilder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                    }
+                });
+
+                AlertDialog alertDialog = alertDialogBuilder.create();
+
+                alertDialog.setOnShowListener(new DialogInterface.OnShowListener() {
+                    @Override
+                    public void onShow(DialogInterface dialog) {
+                        // Get the window and set width and height
+                        if (alertDialog.getWindow() != null) {
+                            int screenWidth = context.getResources().getDisplayMetrics().widthPixels;
+                            int screenHeight = context.getResources().getDisplayMetrics().heightPixels;
+
+                            alertDialog.getWindow().setLayout(
+                                    (int) (screenWidth * 0.9),        // 90% of screen width
+                                    (int) (screenHeight * 0.3)       // 50% of screen height
+                            );
+                        }
+                    }
+                });
+
+                alertDialog.show();
+
             }
         }
     }

@@ -16,6 +16,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.List;
+import java.util.Objects;
 
 import Data.DatabaseHandler;
 import Model.Contact;
@@ -58,9 +59,21 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        Intent intent = getIntent();
-        String addedName = intent.getStringExtra("Name");
-        String addedPhoneNumber = intent.getStringExtra("Phone");
-        contactsDatabase.addContact(new Contact(addedName, addedPhoneNumber));
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        // Refresh the contact list from the database
+        contactList = contactsDatabase.getAllContacts();
+        for(Contact c:contactList) {
+            Log.d("RESUME",c.getContactName());
+        }
+
+        contactsAdapter = new ContactsAdapter(this, contactList);
+        recyclerView.setAdapter(contactsAdapter);
+        contactsAdapter.notifyItemInserted(contactList.size()-1);
+
     }
 }

@@ -1,3 +1,25 @@
 1.             alertDialogBuilder = new AlertDialog.Builder(itemView.getContext());
 Normally we do WidgetsActivity.this when we are outside of a view or ViewHolder.
 here we are inside View itemView, so getting context this way works!
+
+2. to make dialog certain size,
+                AlertDialog alertDialog = alertDialogBuilder.create();
+
+                alertDialog.setOnShowListener(new DialogInterface.OnShowListener() {
+                    @Override
+                    public void onShow(DialogInterface dialog) {
+                        // Get the window and set width and height
+                        if (alertDialog.getWindow() != null) {
+                            //get height and width of overall screen at first
+                            int screenWidth = context.getResources().getDisplayMetrics().widthPixels;
+                            int screenHeight = context.getResources().getDisplayMetrics().heightPixels;
+
+                            alertDialog.getWindow().setLayout(
+                                    (int) (screenWidth * 0.9),        // 90% of screen width
+                                    (int) (screenHeight * 0.3)       // 50% of screen height
+                            );
+                        }
+                    }
+                });
+
+                alertDialog.show();
