@@ -15,8 +15,11 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.contactmanager.AddContactActivity;
 import com.example.contactmanager.R;
 
+import java.time.LocalDateTime;
+import java.util.Arrays;
 import java.util.List;
 
 import Data.DatabaseHandler;
@@ -46,7 +49,7 @@ public class ContactsAdapter extends RecyclerView.Adapter<ContactsAdapter.ViewHo
         Contact contact = contactList.get(position);
         holder.contactName.setText(contact.getContactName());
         holder.contactPhoneNumber.setText(contact.getContactPhoneNumber());
-
+        holder.contactAddedDate.setText(String.format("Last modified: %s", contact.getContactAddedAt()));
     }
 
     @Override
@@ -85,7 +88,6 @@ public class ContactsAdapter extends RecyclerView.Adapter<ContactsAdapter.ViewHo
             int position = getAdapterPosition();
 
             if(buttonId==R.id.contact_delete){
-//                Log.d("DELETE", "Delete contact: name->"+contactList.get(position).getContactName()+", phone->"+contactList.get(position).getContactPhoneNumber());
                 alertDialogBuilder.setTitle("Alert!");
                 alertDialogBuilder.setIcon(R.drawable.cross_icon);
 
@@ -116,7 +118,6 @@ public class ContactsAdapter extends RecyclerView.Adapter<ContactsAdapter.ViewHo
                 AlertDialog alertDialog = alertDialogBuilder.create();
                 alertDialog.show();
 
-                Log.d("SERIOUS", "something error might have happened");
             }
             else if(buttonId==R.id.contact_edit){
                 View view = LayoutInflater.from(context).inflate(R.layout.edit_contact_popup, (ViewGroup) itemView.getRootView(), false);
@@ -137,20 +138,16 @@ public class ContactsAdapter extends RecyclerView.Adapter<ContactsAdapter.ViewHo
                     public void onClick(DialogInterface dialog, int which) {
                         String updatedName = editName.getText().toString();
                         String updatedPhone = editPhone.getText().toString();
-//                        Log.d("UPDATE", updatedName+" "+updatedPhone);
+                        String[] updatedDateTime = toDateTime(LocalDateTime.now());
                         int contactId = contactList.get(getAdapterPosition()).getId();
-                        db.updateContact(new Contact(contactId, updatedName, updatedPhone));
+                        db.updateContact(new Contact(contactId, updatedName, updatedPhone, Arrays.toString(updatedDateTime)));
 
                         Contact c = contactList.get(getAdapterPosition());
                         c.setContactName(updatedName);
                         c.setContactPhoneNumber(updatedPhone);
-
+                        c.setContactAddedAt(Arrays.toString(updatedDateTime));
                         notifyItemChanged(getAdapterPosition());
 
-//                        List<Contact> list = db.getAllContacts();
-//                        for(Contact l:list) {
-//                            Log.d("UPDATE", "id "+l.getId()+" name "+l.getContactName());
-//                        }
                     }
                 });
 
@@ -183,5 +180,24 @@ public class ContactsAdapter extends RecyclerView.Adapter<ContactsAdapter.ViewHo
 
             }
         }
+    }
+    public String[] toDateTime(LocalDateTime localDateTime){
+        //2025-01-06T09:43:51.710641
+        char[] overallDate = localDateTime.toString().toCharArray();
+        StringBuilder tempDate = new StringBuilder(), tempTime=new StringBuilder();
+        String date;
+        String time;
+        for(int j=0; j<overallDate.length; j++){
+            if(j<=9){
+                tempDate.append(overallDate[j]);
+            } else if(j>=11&&j<=15){
+                tempTime.append(overallDate[j]);
+            } else if(j!=10){
+                break;
+            }
+        }
+        date = String.valueOf(tempDate);
+        time = String.valueOf(tempTime);
+        return new String[]{date, time};
     }
 }

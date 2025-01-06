@@ -41,7 +41,6 @@ public class MainActivity extends AppCompatActivity {
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-//        contactsDatabase.addContact(new Contact("Sunil Poudel", "XXXXXXXXXX"));
         contactList = contactsDatabase.getAllContacts();
 
         if(contactsAdapter==null) {
@@ -67,9 +66,9 @@ public class MainActivity extends AppCompatActivity {
 
         // Refresh the contact list from the database
         contactList = contactsDatabase.getAllContacts();
-        for(Contact c:contactList) {
-            Log.d("RESUME",c.getContactName());
-        }
+//        for(Contact c:contactList) {
+//            Log.d("RESUME",c.getContactName());
+//        }
 
         contactsAdapter = new ContactsAdapter(this, contactList);
         recyclerView.setAdapter(contactsAdapter);
