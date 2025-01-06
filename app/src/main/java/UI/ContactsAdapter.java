@@ -138,8 +138,19 @@ public class ContactsAdapter extends RecyclerView.Adapter<ContactsAdapter.ViewHo
                         String updatedName = editName.getText().toString();
                         String updatedPhone = editPhone.getText().toString();
 //                        Log.d("UPDATE", updatedName+" "+updatedPhone);
-                        db.updateContact(new Contact(updatedName, updatedPhone));
+                        int contactId = contactList.get(getAdapterPosition()).getId();
+                        db.updateContact(new Contact(contactId, updatedName, updatedPhone));
+
+                        Contact c = contactList.get(getAdapterPosition());
+                        c.setContactName(updatedName);
+                        c.setContactPhoneNumber(updatedPhone);
+
                         notifyItemChanged(getAdapterPosition());
+
+//                        List<Contact> list = db.getAllContacts();
+//                        for(Contact l:list) {
+//                            Log.d("UPDATE", "id "+l.getId()+" name "+l.getContactName());
+//                        }
                     }
                 });
 
