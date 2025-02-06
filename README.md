@@ -6,6 +6,7 @@ it'll use sqlite to handle the database
 <div class="row">
 <img src="assets/app_1.png" alt="app sample" width="200">
 <img src="assets/app_2.png" alt="app sample" width="200">
+<img src="assets/app_9.png" alt="app sample" width="200">
 </div>
 
 <div class="row">
